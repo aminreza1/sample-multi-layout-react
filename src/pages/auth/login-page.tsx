@@ -20,10 +20,15 @@ const LoginPage: React.FC = () => {
   const onLogin = (e: any) => {
     e.preventDefault();
 
-    let result = authCtx.login(user.username, user.password);
-     console.log(result)
-    // if (result == true) navigate("/dashboard");
-    // else alert("Login failed!");
+    authCtx
+      .login(user.username, user.password)
+      .then((res) => {
+        navigate("/dashboard")
+      })
+      .catch((er) => {
+        alert("Login failed!");
+      });
+    
   };
 
   return (

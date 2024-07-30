@@ -10,7 +10,7 @@ type authDataType = {
 
 export const AuthContext = createContext({
   authData: {} as authDataType,
-  login: (username: string, password: string) : boolean => false,
+  login: (username: string, password: string) : Promise<boolean> => Promise.resolve(false),
   logout: () => {},
 });
 
@@ -26,12 +26,13 @@ const AuthContextProvider: React.FC<{
     username: "",
   });
 
-  const onLogin = (username: string, password: string) : boolean => {
+  const onLogin = async (username: string, password: string) : Promise<boolean> => {
+    
     var dt = new FormData();
     dt.append("username", username);
     dt.append("password", password);
 
-    axios({
+    let result = await axios({
       method: "post",
       url: "http://192.168.0.120:8081/api/auth/login",
       data: dt,
@@ -46,8 +47,10 @@ const AuthContextProvider: React.FC<{
       })
       .catch((err) => {
         console.log(err);
+        return false
       });
-      return false
+      
+      return result;
   };
 
   const onLogout = () => {};
