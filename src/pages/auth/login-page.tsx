@@ -13,8 +13,8 @@ const LoginPage: React.FC = () => {
   const authCtx = useContext(AuthContext);
 
   const [user, setUser] = useState<loginType>({
-    username: "",
-    password: "",
+    username: "aminreza",
+    password: "123456",
   });
 
   const onLogin = (e: any) => {
@@ -22,11 +22,11 @@ const LoginPage: React.FC = () => {
 
     authCtx
       .login(user.username, user.password)
-      .then((res) => {
+      .then((resp) => {  
         navigate("/dashboard")
       })
-      .catch((er) => {
-        alert("Login failed!");
+      .catch((err) => {
+        alert(err);
       });
     
   };
