@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../store/auth-context";
+import Loader from "../../components/loader/loader";
 
 export type loginType = {
   username: string;
@@ -12,6 +13,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
+  const [loader, setLoader] = useState<boolean>(false);
   const [user, setUser] = useState<loginType>({
     username: "aminreza",
     password: "123456",
@@ -20,15 +22,19 @@ const LoginPage: React.FC = () => {
   const onLogin = (e: any) => {
     e.preventDefault();
 
+    if(loader) return;
+    
+    setLoader(true);
     authCtx
       .login(user.username, user.password)
-      .then((resp) => {  
-        navigate("/dashboard")
+      .then((resp) => {
+        setLoader(false);
+        navigate("/dashboard");
       })
       .catch((err) => {
+        setLoader(false);
         alert(err);
       });
-    
   };
 
   return (
@@ -64,9 +70,16 @@ const LoginPage: React.FC = () => {
             }}
           />
         </div>
-        <div className="pt-2">
-          <button className="btn btn-primary">Login</button>
-        </div>
+        {loader && (
+          <div className="flex justify-center">
+            <Loader />
+          </div>
+        )}
+        {!loader && (
+          <div className="pt-2">
+            <button className="btn btn-primary">Login</button>
+          </div>
+        )}
       </form>
     </div>
   );
